@@ -1,1 +1,17 @@
 .env
+# Python bytecode
+__pycache__/
+*.pyc
+
+# IDE-specific files
+.idea/
+
+# Data files (consider adding only if not necessary in the repo)
+merged_data2.csv
+total_fertility_rate_with_others.csv
+
+# Alembic migrations, if not necessary for version control
+alembic.ini
+migrations/
+
+# Other sensitive or environment-specific files
