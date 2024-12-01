@@ -2,9 +2,14 @@ import pandas as pd
 from .constants import INPUT_DATA_PATH
 
 class DataModelLoader:
-    def __init__(self):
-        self.df_input = None
-        self.model_dict = {}
+    _instance = None
+
+    def __new__(cls):
+        if cls._instance is None:
+            cls._instance = super(DataModelLoader, cls).__new__(cls)
+            cls._instance.df_input = None
+            cls._instance.model_dict = {}
+        return cls._instance
 
     def load(self):
         self.df_input = pd.read_csv(INPUT_DATA_PATH)

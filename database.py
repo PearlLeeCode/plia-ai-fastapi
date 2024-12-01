@@ -1,22 +1,23 @@
 from sqlalchemy import create_engine
 from sqlalchemy.ext.declarative import declarative_base
-from sqlalchemy.orm import Session
-from sqlalchemy.orm import sessionmaker
+from sqlalchemy.orm import Session, sessionmaker
 from typing import Generator
+import os
 
-DATABASE_URL = "mysql+mysqlconnector://root:password123@localhost/policy-helper"
+class Database:
+    def __init__(self):
+        self.DATABASE_URL = os.getenv("DATABASE_URL", "mysql+mysqlconnector://root:password123@localhost/policy-helper")
+        self.engine = create_engine(self.DATABASE_URL, echo=True)
+        self.SessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=self.engine)
+        self.Base = declarative_base()
 
-engine = create_engine(DATABASE_URL, echo=True)
-SessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=engine)
+    def get_db(self) -> Generator[Session, None, None]:
+        db = self.SessionLocal()
+        try:
+            yield db
+        finally:
+            db.close()
 
-# 세션 생성
-
-Base = declarative_base()
-
-# 의존성 주입을 위한 세션 생성 함수
-def get_db() -> Generator[Session, None, None]:
-    db = SessionLocal()
-    try:
-        yield db
-    finally:
-        db.close()
+database = Database()
+Base = database.Base
+get_db = database.get_db
