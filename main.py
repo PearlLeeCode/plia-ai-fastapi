@@ -1,7 +1,7 @@
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 from simulation.router import router as simulation_router
-from simulation.dependencies import load_model_and_data
+from simulation.data_model_loader import load_model_and_data
 
 def create_app() -> FastAPI:
     app = FastAPI(

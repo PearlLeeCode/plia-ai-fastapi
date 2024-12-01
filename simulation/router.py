@@ -1,5 +1,5 @@
 from fastapi import APIRouter
-from .schemas import InputData
+from .input_data import InputData
 from .service import SimulationService
 
 router = APIRouter(

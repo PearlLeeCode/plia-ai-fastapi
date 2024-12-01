@@ -1,9 +1,9 @@
 import pandas as pd  # pandas import 추가
 import logging
-from .dependencies import data_model_loader
+from .data_model_loader import data_model_loader
 from .predictor import Predictor
 from .insight_generator import InsightGenerator
-from .schemas import InputData
+from .input_data import InputData
 
 class SimulationService:
     def __init__(self):
