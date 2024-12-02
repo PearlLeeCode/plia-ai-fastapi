@@ -22,11 +22,11 @@ class InsightGenerator:
     def _create_prompt_template(self):
         return PromptTemplate(
             input_variables=["target_variable_name", "policy_variable_name", "policy_value", "prediction_length",
-                             "future_feat_values", "extended_feat_dynamic_real", "predictions", "historical"],
+                             "future_feat_values", "extended_feat_dynamic_real", "predictions", "historical", "mape"],
             template="""
 당신은 정책 시뮬레이션 결과를 분석하는 정치학자입니다.
-정책 시뮬레이션 결과를 바탕으로 시사점 및 고찰을 작성해 주세요. 답변을 통해 입법조사관이 제시하는 정책변수의 값이 목적변수에 미치는 영향을 설명해 주세요. 답변을 통해 입법조사관이 정책 결정에 도움이 되도록 해주세요. 제시하는 정책변수의 값이 목적변수에 미치는 영향에 대해서 창의적으로 해석하고 심도 있게 분석해 주세요. 이를 바탕으로 정책의 효과성을 검토하고자 합니다.
-다음은 정책 시뮬레이션 결과입니다:
+정책 시뮬레이션 결과를 바탕으로 시사점 및 고찰을 작성해 주세요. 답변을 통해 입법조사관이 제시하는 정책변수의 값이 목적변수에 미치는 영향을 설명해 주세요. 답변을 통해 입법조사관이 정책 결정에 도움이 되도록 해주세요. 제시하는 정책변수의 값이 목적변수에 미치는 영향에 대해서 창의적으로 해석하고 심도 있게 분석해 주세요. 이를 바탕으로 정책의 효과성을 검토하고자 합니다. 또한 MAPE 값에 대한 분석도 포함해 주세요.
+다음은 정책 시뮬레이션에 대한 데이터 및 결과입니다:
 
 입력 받은 목적변수명: {target_variable_name}
 입력 받은 정책변수명: {policy_variable_name}
@@ -37,6 +37,8 @@ class InsightGenerator:
 
 예측된 목적변수 값:
 {predictions}
+
+MAPE: {mape:.2f}%
 
 {target_variable_name}의 과거 데이터:
 {historical}
@@ -64,7 +66,7 @@ class InsightGenerator:
 """
         )
 
-    def generate_insights(self, input_variables, predictions, historical):
+    def generate_insights(self, input_variables, predictions, historical, mape):
         prompt = self.prompt_template.format(
             target_variable_name=input_variables['target_variable_name'],
             policy_variable_name=input_variables['policy_variable_name'],
@@ -73,7 +75,8 @@ class InsightGenerator:
             future_feat_values=input_variables['future_feat_values'],
             extended_feat_dynamic_real=input_variables['extended_feat_dynamic_real'],
             predictions=predictions,
-            historical=historical
+            historical=historical,
+            mape=mape
         )
 
         try:
